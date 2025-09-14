@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Women Suraksha</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="../public/css/style.css">
+    <link rel="stylesheet" href="../public/css/contact.css">
+</head>
+
+<body>
+    <!-- Same navigation as index.html -->
+    <nav>
+        <div class="logo">WS</div>
+        <div class="nav-links">
+            <div class="close-nav">
+                <i class="fas fa-times"></i>
+            </div>
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="blog.html">Blog</a>
+            <a href="contact.html">Contact</a>
+            <a href="dashboard.html" id="dashboardLink">Dashboard</a>
+        </div>
+
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search...">
+            <button id="searchBtn"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="toggle-btn">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+
+    <script>
+        // Toggle Navigation
+        const toggleBtn = document.querySelector('.toggle-btn');
+        const navLinks = document.querySelector('.nav-links');
+        const closeNav = document.querySelector('.close-nav');
+    
+        toggleBtn.addEventListener('click', () => {
+            navLinks.classList.add('active');
+        });
+    
+        closeNav.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+        });
+    
+        // Close navigation when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navLinks.contains(e.target) && !toggleBtn.contains(e.target)) {
+                navLinks.classList.remove('active');
+            }
+        });
+    </script>
+
+<script>
+    // Search functionality
+    const searchData = {
+        // Existing pages
+        'home': {
+            title: 'Home',
+            content: 'Stay Safe, Stay Connected. Your safety is our priority.',
+            url: 'index.html',
+            keywords: 'home, main page, welcome, safety app, women safety, protection, Key Features'
+        },
+        'about': {
+            title: 'About Us',
+            content: 'Learn about Women Suraksha and our mission for women safety.',
+            url: 'about.html',
+            keywords: 'about us, mission, vision, team, women empowerment, who we are'
+        },
+        'blog': {
+            title: 'Safety Blog',
+            content: 'Read latest articles about women safety and empowerment.',
+            url: 'blog.html',
+            keywords: 'blog, articles, safety tips, self defense, awareness, news'
+        },
+        'contact': {
+            title: 'Contact Us',
+            content: 'Get in touch with our support team.',
+            url: 'contact.html',
+            keywords: 'contact, support, help, assistance, reach us, phone, email'
+        },
+        'dashboard': {
+            title: 'Dashboard',
+            content: 'Access your personal safety dashboard.',
+            url: 'dashboard.html',
+            keywords: 'dashboard, profile, settings, my account, tracking'
+        },
+        'emergency': {
+            title: 'Emergency Services',
+            content: '24/7 emergency support and SOS features.',
+            url: 'dashboard.html#sos',
+            keywords: 'emergency, SOS, help, urgent, crisis, alert, panic button'
+        },
+        'safety': {
+            title: 'Safety Resources',
+            content: 'Access safety guidelines and emergency numbers.',
+            url: 'dashboard.html#resources',
+            keywords: 'resources, guidelines, emergency numbers, safety tips'
+        },
+        // Additional features and topics
+        'location': {
+            title: 'Location Tracking',
+            content: 'Real-time location tracking and sharing features.',
+            url: 'dashboard.html',
+            keywords: 'location, GPS, tracking, real-time, share location'
+        },
+        'self-defense': {
+            title: 'Self Defense',
+            content: 'Learn essential self-defense techniques and tips.',
+            url: 'blog.html#self-defense',
+            keywords: 'self defense, protection, martial arts, safety techniques'
+        },
+        'helpline': {
+            title: 'Helpline Numbers',
+            content: 'Important emergency and helpline numbers.',
+            url: 'dashboard.html#resources',
+            keywords: 'helpline, emergency numbers, police, ambulance, support'
+        },
+        'community': {
+            title: 'Community Support',
+            content: 'Join our community of strong and supportive women.',
+            url: 'blog.html#community',
+            keywords: 'community, support group, network, women network'
+        },
+        'legal': {
+            title: 'Legal Resources',
+            content: 'Access legal information and women\'s rights resources.',
+            url: 'blog.html#legal',
+            keywords: 'legal, rights, laws, women rights, legal help'
+        }
+    };
+
+    // Update performSearch function to include keywords
+    function performSearch(searchTerm) {
+        const results = [];
+        searchTerm = searchTerm.toLowerCase();
+
+        for (const key in searchData) {
+            if (key.toLowerCase().includes(searchTerm) ||
+                searchData[key].title.toLowerCase().includes(searchTerm) ||
+                searchData[key].content.toLowerCase().includes(searchTerm) ||
+                searchData[key].keywords.toLowerCase().includes(searchTerm)) {
+                results.push(searchData[key]);
+            }
+        }
+
+        return results;
+    }
+
+    // ... rest of the code remains the same ...
+
+    function createSearchResults() {
+        if (!document.querySelector('.search-results')) {
+            const resultsDiv = document.createElement('div');
+            resultsDiv.className = 'search-results';
+            document.querySelector('.search-container').appendChild(resultsDiv);
+        }
+    }
+
+
+
+    function displayResults(results) {
+        const resultsDiv = document.querySelector('.search-results');
+        if (results.length === 0) {
+            resultsDiv.innerHTML = '<div class="search-result-item"><p>No results found</p></div>';
+        } else {
+            resultsDiv.innerHTML = results.map(result => `
+            <div class="search-result-item" onclick="window.location.href='${result.url}'">
+                <h4>${result.title}</h4>
+                <p>${result.content}</p>
+            </div>
+        `).join('');
+        }
+        resultsDiv.classList.add('active');
+    }
+
+    // Initialize search functionality
+    document.addEventListener('DOMContentLoaded', function () {
+        createSearchResults();
+
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const resultsDiv = document.querySelector('.search-results');
+
+        searchInput.addEventListener('input', function () {
+            if (this.value.length > 2) {
+                const results = performSearch(this.value);
+                displayResults(results);
+            } else {
+                resultsDiv.classList.remove('active');
+            }
+        });
+
+        searchBtn.addEventListener('click', function () {
+            if (searchInput.value.length > 2) {
+                const results = performSearch(searchInput.value);
+                displayResults(results);
+            }
+        });
+
+        // Close search results when clicking outside
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.search-container')) {
+                resultsDiv.classList.remove('active');
+            }
+        });
+    });
+</script>
+
+    <section class="contact-hero">
+        <div class="contact-hero-content">
+            <h1>Get in Touch</h1>
+            <p>We're here to help and answer any questions you might have</p>
+        </div>
+    </section>
+
+    <div class="contact-container">
+        <div class="contact-info">
+            <div class="info-card">
+                <i class="fas fa-phone"></i>
+                <h3>Call Us</h3>
+                <p>24/7 Helpline</p>
+                <a href="tel:1800SAFENOW">1800-SAFE-NOW</a>
+            </div>
+            <div class="info-card">
+                <i class="fas fa-envelope"></i>
+                <h3>Email Us</h3>
+                <p>Support Team</p>
+                <a href="mailto:support@womensuraksha.com">support@womensuraksha.com</a>
+            </div>
+            <div class="info-card">
+                <i class="fas fa-map-marker-alt"></i>
+                <h3>Visit Us</h3>
+                <p>Main Office</p>
+                <address>123 Safety Street, Secure City, 100001</address>
+            </div>
+        </div>
+
+        <div class="contact-form-container">
+            <form id="contactForm" class="contact-form">
+                <h2>Send us a Message</h2>
+                <div class="form-group">
+                    <input type="text" id="name" required>
+                    <label for="name">Your Name</label>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" required>
+                    <label for="email">Your Email</label>
+                </div>
+                <div class="form-group">
+                    <select id="subject" required>
+                        <option value="">Select Subject</option>
+                        <option value="support">Technical Support</option>
+                        <option value="emergency">Emergency Support</option>
+                        <option value="feedback">Feedback</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <textarea id="message" required></textarea>
+                    <label for="message">Your Message</label>
+                </div>
+                <button type="submit" class="submit-btn">Send Message</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="map-section">
+        <h2>Find Us on Map</h2>
+        <div id="map"></div>
+    </div>
+
+    <!-- Footer from index.html -->
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Women Suraksha</h3>
+                <p>Empowering women with innovative safety solutions. Your security is our priority, 24/7.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#features">Safety Features</a></li>
+                    <li><a href="blog.html">Safety Blog</a></li>
+                    <li><a href="contact.html">Contact Support</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Safety Resources</h4>
+                <ul>
+                    <li><a href="#">Emergency Numbers</a></li>
+                    <li><a href="#">Safety Guidelines</a></li>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Report an Issue</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Download App</h4>
+                <div class="app-buttons">
+                    <a href="#" class="app-btn">
+                        <i class="fab fa-google-play"></i>
+                        <span>Google Play</span>
+                    </a>
+                    <a href="#" class="app-btn">
+                        <i class="fab fa-apple"></i>
+                        <span>App Store</span>
+                    </a>
+                </div>
+                <p class="emergency">24/7 Emergency: <span>1800-SAFE-NOW</span></p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 Women Suraksha App. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Cookie Policy</a>
+            </div>
+        </div>
+    </footer>
+
+       <!-- ... existing code ... -->
+       <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
+       <script>
+           document.addEventListener('DOMContentLoaded', function () {
+               // Initialize Google Map with New Delhi coordinates (as an example)
+               const map = new google.maps.Map(document.getElementById('map'), {
+                   center: { lat: 28.6139, lng: 77.2090 },
+                   zoom: 15,
+                   styles: [
+                       {
+                           "featureType": "all",
+                           "elementType": "geometry",
+                           "stylers": [{ "color": "#ffeae8" }]
+                       }
+                   ]
+               });
+   
+               // Add marker
+               new google.maps.Marker({
+                   position: { lat: 28.6139, lng: 77.2090 },
+                   map: map,
+                   title: 'Women Suraksha Office'
+               });
+   
+               // ... rest of your existing script ...
+           });
+       </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initialize Google Map
+            const map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: YOUR_LATITUDE, lng: YOUR_LONGITUDE },
+                zoom: 15
+            });
+
+            // Add marker
+            new google.maps.Marker({
+                position: { lat: YOUR_LATITUDE, lng: YOUR_LONGITUDE },
+                map: map,
+                title: 'Women Suraksha Office'
+            });
+
+            // Form handling
+            const contactForm = document.getElementById('contactForm');
+
+            contactForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    subject: document.getElementById('subject').value,
+                    message: document.getElementById('message').value
+                };
+
+                try {
+                    // Add your form submission logic here
+                    // Example: await fetch('/api/contact', {...})
+
+                    // Show success message
+                    alert('Thank you for your message. We will get back to you soon!');
+                    contactForm.reset();
+                } catch (error) {
+                    alert('There was an error sending your message. Please try again.');
+                }
+            });
+
+            // Form animation
+            const formGroups = document.querySelectorAll('.form-group');
+            formGroups.forEach((group, index) => {
+                group.style.animation = `fadeIn 0.5s ease forwards ${index * 0.1}s`;
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>WS</title>
+    <link rel="stylesheet" href="../public/css/style.css">
+    <style>
+        .particles-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background: linear-gradient(45deg, #1a1a1a, #2c3e50);
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            animation: float 8s infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-1000px) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .cover-page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #010816;
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .animation-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ring {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            border: 4px solid transparent;
+            border-radius: 50%;
+            border-top: 4px solid #00a6ff;
+            animation: ringRotate 2s linear infinite, ringScale 1s ease-out;
+            box-shadow: 0 0 30px rgba(0, 166, 255, 0.3);
+        }
+
+        .ring::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border: 4px solid transparent;
+            border-bottom: 4px solid #00a6ff;
+            border-radius: 50%;
+            animation: ringRotate 3s linear infinite reverse;
+        }
+
+        .ws-animation {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .woman-word,
+        .suraksha-word {
+            display: flex;
+            gap: 10px;
+        }
+
+        .woman-word span {
+            color: #fff;
+            font-size: 72px;
+            font-weight: bold;
+            opacity: 0;
+            transform: translateY(50px);
+            text-shadow: 0 0 20px rgba(0, 166, 255, 0.7);
+            animation: letterAnimationIn 0.5s ease-in-out forwards,
+                letterAnimationOut 0.5s ease-in-out forwards;
+            animation-delay: var(--delay-in), var(--delay-out);
+            font-family: 'Arial', sans-serif;
+            letter-spacing: 2px;
+            display: inline-block;
+        }
+
+        .suraksha-word span {
+            color: #fff;
+            font-size: 48px;
+            font-weight: bold;
+            opacity: 0;
+            transform: translateY(50px);
+            text-shadow: 0 0 20px rgba(0, 166, 255, 0.7);
+            animation: letterAnimationIn 0.5s ease-in-out forwards,
+                letterAnimationOut 0.5s ease-in-out forwards;
+            animation-delay: var(--delay-in), var(--delay-out);
+            font-family: 'Arial', sans-serif;
+            letter-spacing: 2px;
+            display: inline-block;
+        }
+
+        /* Animation Delays */
+        /* Animation Delays */
+        .woman-word span:nth-child(1) {
+            --delay-in: 0.2s;
+            --delay-out: 4.0s;
+        }
+
+        .woman-word span:nth-child(2) {
+            --delay-in: 0.4s;
+            --delay-out: 4.2s;
+        }
+
+        .woman-word span:nth-child(3) {
+            --delay-in: 0.6s;
+            --delay-out: 4.4s;
+        }
+
+        .woman-word span:nth-child(4) {
+            --delay-in: 0.8s;
+            --delay-out: 4.6s;
+        }
+
+        .woman-word span:nth-child(5) {
+            --delay-in: 1.0s;
+            --delay-out: 4.8s;
+        }
+
+        .suraksha-word span:nth-child(1) {
+            --delay-in: 1.2s;
+            --delay-out: 5.0s;
+        }
+
+        .suraksha-word span:nth-child(2) {
+            --delay-in: 1.4s;
+            --delay-out: 5.1s;
+        }
+
+        .suraksha-word span:nth-child(3) {
+            --delay-in: 1.6s;
+            --delay-out: 5.2s;
+        }
+
+        .suraksha-word span:nth-child(4) {
+            --delay-in: 1.8s;
+            --delay-out: 5.3s;
+        }
+
+        .suraksha-word span:nth-child(5) {
+            --delay-in: 2.0s;
+            --delay-out: 5.4s;
+        }
+
+        .suraksha-word span:nth-child(6) {
+            --delay-in: 2.2s;
+            --delay-out: 5.5s;
+        }
+
+        .suraksha-word span:nth-child(7) {
+            --delay-in: 2.4s;
+            --delay-out: 5.6s;
+        }
+
+        .suraksha-word span:nth-child(8) {
+            --delay-in: 2.6s;
+            --delay-out: 5.7s;
+        }
+
+        @keyframes letterAnimationIn {
+            0% {
+                opacity: 0;
+                transform: translateY(50px) scale(0.5) rotate(10deg);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1) rotate(0deg);
+            }
+        }
+
+        @keyframes letterAnimationOut {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1) rotate(0deg);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.5) rotate(-10deg);
+            }
+        }
+
+        @keyframes ringRotate {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes ringScale {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Large screens (above 1200px) */
+        @media screen and (min-width: 1201px) {
+            .ring {
+                width: 600px;
+                height: 600px;
+            }
+
+            .woman-word span {
+                font-size: 72px;
+            }
+
+            .suraksha-word span {
+                font-size: 48px;
+            }
+        }
+
+        /* Medium-large screens (992px - 1200px) */
+        @media screen and (max-width: 1200px) {
+            .ring {
+                width: 500px;
+                height: 500px;
+            }
+
+            .woman-word span {
+                font-size: 64px;
+            }
+
+            .suraksha-word span {
+                font-size: 42px;
+            }
+        }
+
+        /* Medium screens (768px - 991px) */
+        @media screen and (max-width: 991px) {
+            .ring {
+                width: 400px;
+                height: 400px;
+            }
+
+            .woman-word span {
+                font-size: 54px;
+                gap: 8px;
+            }
+
+            .suraksha-word span {
+                font-size: 36px;
+                gap: 6px;
+            }
+
+            .woman-word,
+            .suraksha-word {
+                gap: 8px;
+            }
+        }
+
+        /* Small screens (576px - 767px) */
+        @media screen and (max-width: 767px) {
+            .ring {
+                width: 300px;
+                height: 300px;
+            }
+
+            .woman-word span {
+                font-size: 42px;
+                gap: 6px;
+            }
+
+            .suraksha-word span {
+                font-size: 28px;
+                gap: 4px;
+            }
+
+            .woman-word,
+            .suraksha-word {
+                gap: 6px;
+            }
+
+            .ws-animation {
+                gap: 15px;
+            }
+        }
+
+        /* Extra small screens (480px - 575px) */
+        @media screen and (max-width: 575px) {
+            .ring {
+                width: 250px;
+                height: 250px;
+            }
+
+            .woman-word span {
+                font-size: 36px;
+                gap: 4px;
+                letter-spacing: 1px;
+            }
+
+            .suraksha-word span {
+                font-size: 24px;
+                gap: 3px;
+                letter-spacing: 1px;
+            }
+
+            .woman-word,
+            .suraksha-word {
+                gap: 4px;
+            }
+
+            .ws-animation {
+                gap: 12px;
+            }
+        }
+
+        /* Very small screens (below 480px) */
+        @media screen and (max-width: 479px) {
+            .ring {
+                width: 200px;
+                height: 200px;
+                border-width: 3px;
+            }
+
+            .ring::before {
+                border-width: 3px;
+            }
+
+            .woman-word span {
+                font-size: 28px;
+                gap: 3px;
+                letter-spacing: 0.5px;
+            }
+
+            .suraksha-word span {
+                font-size: 20px;
+                gap: 2px;
+                letter-spacing: 0.5px;
+            }
+
+            .woman-word,
+            .suraksha-word {
+                gap: 3px;
+            }
+
+            .ws-animation {
+                gap: 10px;
+            }
+        }
+
+        /* Extremely small screens (below 360px) */
+        @media screen and (max-width: 359px) {
+            .ring {
+                width: 180px;
+                height: 180px;
+                border-width: 2px;
+            }
+
+            .ring::before {
+                border-width: 2px;
+            }
+
+            .woman-word span {
+                font-size: 24px;
+                gap: 2px;
+            }
+
+            .suraksha-word span {
+                font-size: 16px;
+                gap: 1px;
+            }
+
+            .woman-word,
+            .suraksha-word {
+                gap: 2px;
+            }
+
+            .ws-animation {
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cover-page" id="coverPage">
+        <div class="animation-container">
+            <div class="ring"></div>
+            <div class="ws-animation">
+                <div class="woman-word">
+                    <span>W</span>
+                    <span>O</span>
+                    <span>M</span>
+                    <span>A</span>
+                    <span>N</span>
+                </div>
+                <div class="suraksha-word">
+                    <span>S</span>
+                    <span>U</span>
+                    <span>R</span>
+                    <span>A</span>
+                    <span>K</span>
+                    <span>S</span>
+                    <span>H</span>
+                    <span>A</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Cover page animation
+            setTimeout(() => {
+                document.getElementById('coverPage').style.display = 'none';
+            }, 6000); // Animation duration
+        });
+    </script>
+
+    <div class="particles-background" id="particles"></div>
+    <nav>
+        <div class="logo">WS</div>
+        <div class="nav-links">
+            <div class="close-nav">
+                <i class="fas fa-times"></i>
+            </div>
+            <a href="index.html">Home</a>
+            <a href="signup.html">Sign Up</a>
+            <a href="admin-login.html">Admin</a>
+        </div>
+        <div class="toggle-btn">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+
+    <script>
+        // Toggle Navigation
+        const toggleBtn = document.querySelector('.toggle-btn');
+        const navLinks = document.querySelector('.nav-links');
+        const closeNav = document.querySelector('.close-nav');
+
+        toggleBtn.addEventListener('click', () => {
+            navLinks.classList.add('active');
+        });
+
+        closeNav.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+        });
+
+        // Close navigation when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navLinks.contains(e.target) && !toggleBtn.contains(e.target)) {
+                navLinks.classList.remove('active');
+            }
+        });
+    </script>
+
+    <div class="form-container">
+        <h2>Login</h2>
+        <div id="errorMessage" class="error-message" style="display: none; color: red; margin-bottom: 10px;"></div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+                <button type="button" class="toggle-password" onclick="togglePassword()">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+            <button type="submit" class="btn primary">Login</button>
+        </form>
+        <p><a href="forgot-password.html">Forgot Password?</a></p>
+        <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
+    </div>
+    <script src="../public/js/main.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errorMessage = document.getElementById('errorMessage');
+            const submitButton = e.target.querySelector('button[type="submit"]');
+
+            try {
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<span class="spinner"></span> Logging in...';
+                errorMessage.style.display = 'none';
+
+                const formData = {
+                    email: document.getElementById('email').value,
+                    password: document.getElementById('password').value
+                };
+
+                // Update fetch URL to include full server address
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Login failed');
+                }
+
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                    window.location.href = 'dashboard.html';
+                }
+            } catch (err) {
+                console.error('Login Error:', err);
+                errorMessage.textContent = err.message || 'Login failed. Please try again.';
+                errorMessage.style.display = 'block';
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Login';
+            }
+        });
+    </script>
+
+    <!-- show password -->
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleButton = document.querySelector('.toggle-password i');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleButton.classList.remove('fa-eye');
+                toggleButton.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleButton.classList.remove('fa-eye-slash');
+                toggleButton.classList.add('fa-eye');
+            }
+        }
+    </script>
+    <!-- ... existing code ... -->
+    <script>
+        function createParticle() {
+            const particles = document.getElementById('particles');
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+
+            // Random size between 5 and 20 pixels
+            const size = Math.random() * 15 + 5;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+
+            // Random starting position
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.bottom = '-20px';
+
+            // Random animation duration
+            particle.style.animationDuration = `${Math.random() * 4 + 4}s`;
+
+            // Random color
+            const colors = [
+                'rgba(255, 255, 255, 0.4)',
+                'rgba(135, 206, 235, 0.4)',
+                'rgba(173, 216, 230, 0.4)',
+                'rgba(176, 224, 230, 0.4)'
+            ];
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+            particles.appendChild(particle);
+
+            // Remove particle after animation
+            setTimeout(() => {
+                particle.remove();
+            }, 8000);
+        }
+
+        // Create particles periodically
+        setInterval(createParticle, 200);
+    </script>
+
+
+</body>
+
+</html>

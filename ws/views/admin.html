@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - WS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="../public/css/style.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --danger-color: #dc2626;
+            --success-color: #16a34a;
+            --background-color: #f1f5f9;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        body {
+            background-color: var(--background-color);
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: #1f2937;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 24px;
+        }
+
+        .admin-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .admin-card-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 20px 25px;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary-color);
+        }
+
+        .stat-card i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .stat-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .stat-card p {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .user-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 20px 0;
+        }
+
+        .user-table th,
+        .user-table td {
+            padding: 16px 24px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .user-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #475569;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+        }
+
+        .user-table tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .status-active {
+            color: var(--success-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-inactive {
+            color: var(--danger-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .view-btn {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .view-btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-1px);
+        }
+
+        .block-btn {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .block-btn:hover {
+            background: #b91c1c;
+            transform: translateY(-1px);
+        }
+
+        .filter-section {
+            padding: 24px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .filter-section input,
+        .filter-section select {
+            padding: 10px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            min-width: 200px;
+            transition: all 0.2s;
+        }
+
+        .filter-section input:focus,
+        .filter-section select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        nav {
+            background: white;
+            padding: 16px 24px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: #475569;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover {
+            background: #f1f5f9;
+            color: var(--primary-color);
+        }
+
+        .user-details-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 700px;
+            margin: 50px auto;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .close-modal {
+            float: right;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #64748b;
+            transition: color 0.2s;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close-modal:hover {
+            color: var(--danger-color);
+            background: #fee2e2;
+        }
+
+        #userDetails {
+            margin-top: 24px;
+        }
+
+        #userDetails p {
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        #userDetails h3 {
+            margin: 24px 0 16px;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        #userDetails ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        #userDetails li {
+            padding: 12px 16px;
+            background: #f8fafc;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .edit-btn {
+            background: #4f46e5;
+            color: white;
+            margin: 0 4px;
+        }
+
+        .edit-btn:hover {
+            background: #4338ca;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="logo">WS Admin</div>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="#" id="logout">Logout</a>
+        </div>
+    </nav>
+
+    <div class="admin-container">
+        <div class="admin-stats">
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <h3>Total Users</h3>
+                <p id="totalUsers">Loading...</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-user-clock"></i>
+                <h3>Active Users</h3>
+                <p id="activeUsers">Loading...</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>SOS Alerts</h3>
+                <p id="totalAlerts">Loading...</p>
+            </div>
+        </div>
+
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h2>User Management</h2>
+            </div>
+            <div class="filter-section">
+                <input type="text" id="searchUser" placeholder="Search users...">
+                <select id="statusFilter">
+                    <option value="all">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>Avatar</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Status</th>
+                        <th>Last Active</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="userTableBody">
+                    <!-- User data will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- User Details Modal -->
+    <div class="user-details-modal" id="userModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeUserModal()">&times;</span>
+            <h2>User Details</h2>
+            <div id="userDetails"></div>
+        </div>
+    </div>
+
+    <script>
+        // Check if admin is logged in
+        if (!localStorage.getItem('adminToken')) {
+            window.location.href = 'admin-login.html';
+        }
+
+        // Load user data
+        async function loadUsers() {
+            try {
+                const token = localStorage.getItem('adminToken');
+                if (!token) {
+                    throw new Error('No admin token found');
+                }
+
+                const response = await fetch('http://localhost:5000/api/admin/users', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.status === 401) {
+                    localStorage.removeItem('adminToken');
+                    window.location.href = 'admin-login.html';
+                    return;
+                }
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const users = await response.json();
+                if (!Array.isArray(users)) {
+                    throw new Error('Invalid data format received');
+                }
+
+                updateStats(users);
+                displayUsers(users);
+            } catch (err) {
+                console.error('Error loading users:', err);
+                const tableBody = document.getElementById('userTableBody');
+                tableBody.innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align: center; color: #dc3545;">
+                    Failed to load user data. ${err.message}
+                </td>
+            </tr>
+        `;
+
+                // Update stats with error state
+                document.getElementById('totalUsers').textContent = 'Error';
+                document.getElementById('activeUsers').textContent = 'Error';
+                document.getElementById('totalAlerts').textContent = 'Error';
+            }
+        }
+
+        function updateStats(users) {
+            document.getElementById('totalUsers').textContent = users.length;
+            document.getElementById('activeUsers').textContent =
+                users.filter(user => user.status === 'active').length;
+            // You'll need to implement the alerts count based on your data structure
+            document.getElementById('totalAlerts').textContent = '0';
+        }
+
+        function displayUsers(users) {
+            const tableBody = document.getElementById('userTableBody');
+            if (!users.length) {
+                tableBody.innerHTML = `<tr><td colspan="7" style="text-align: center;">No users found</td></tr>`;
+                return;
+            }
+
+            tableBody.innerHTML = users.map(user => `
+        <tr>
+            <td>
+                <div style="width: 40px; height: 40px; border-radius: 50%; overflow: hidden; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                    ${user.avatar ?
+                    `<img src="${user.avatar}" style="width: 100%; height: 100%; object-fit: cover;">` :
+                    `<i class="fas fa-user" style="font-size: 20px; color: #666;"></i>`
+                }
+                </div>
+            </td>
+            <td>${user.name}</td>
+            <td>${user.email}</td>
+            <td>${user.phone}</td>
+            <td>
+                <span class="status-${user.status?.toLowerCase()}">
+                    <i class="fas fa-circle"></i> 
+                    ${user.status?.charAt(0).toUpperCase() + user.status?.slice(1)}
+                </span>
+            </td>
+            <td>${new Date(user.lastActive).toLocaleString()}</td>
+            <td>
+                <button onclick="viewUserDetails('${user._id}')" class="action-btn view-btn">
+                    <i class="fas fa-eye"></i> View
+                </button>
+                <button onclick="editUserDetails('${user._id}')" class="action-btn edit-btn">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+                <button onclick="toggleUserStatus('${user._id}')" class="action-btn block-btn">
+                    <i class="fas fa-ban"></i> 
+                    ${user.status === 'active' ? 'Block' : 'Unblock'}
+                </button>
+            </td>
+        </tr>
+    `).join('');
+        }
+
+        async function editUserDetails(userId) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/admin/user/${userId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load user details');
+                }
+
+                const user = await response.json();
+                const modal = document.getElementById('userModal');
+                const detailsDiv = document.getElementById('userDetails');
+
+                detailsDiv.innerHTML = `
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden; margin: 0 auto; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                    ${user.avatar ?
+                        `<img src="${user.avatar}" style="width: 100%; height: 100%; object-fit: cover;">` :
+                        `<i class="fas fa-user" style="font-size: 40px; color: #666;"></i>`
+                    }
+                </div>
+            </div>
+            <form id="editUserForm" onsubmit="updateUser(event, '${user._id}')">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" name="name" value="${user.name || ''}" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" value="${user.email || ''}" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" name="phone" value="${user.phone || ''}">
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <input type="text" name="address" value="${user.address || ''}">
+                </div>
+                <button type="submit" class="action-btn view-btn">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </form>
+        `;
+
+                modal.style.display = 'block';
+            } catch (err) {
+                console.error('Error:', err);
+                alert('Failed to load user details');
+            }
+        }
+
+        async function updateUser(event, userId) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = {
+                name: form.name.value,
+                email: form.email.value,
+                phone: form.phone.value,
+                address: form.address.value
+            };
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/admin/user/${userId}/update`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to update user');
+                }
+
+                closeUserModal();
+                loadUsers(); // Reload user list
+                alert('User updated successfully');
+            } catch (err) {
+                console.error('Error:', err);
+                alert('Failed to update user: ' + err.message);
+            }
+        }
+
+        async function viewUserDetails(userId) {
+    try {
+        const response = await fetch(`http://localhost:5000/api/admin/user/${userId}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const user = await response.json();
+        const modal = document.getElementById('userModal');
+        const detailsDiv = document.getElementById('userDetails');
+
+        detailsDiv.innerHTML = `
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="width: 100px; height: 100px; border-radius: 50%; overflow: hidden; margin: 0 auto; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                    ${user.avatar ? 
+                        `<img src="${user.avatar}" style="width: 100%; height: 100%; object-fit: cover;">` :
+                        `<i class="fas fa-user" style="font-size: 40px; color: #666;"></i>`
+                    }
+                </div>
+            </div>
+            <p><strong>Name:</strong> ${user.name}</p>
+            <p><strong>Email:</strong> ${user.email}</p>
+            <p><strong>Phone:</strong> ${user.phone || 'N/A'}</p>
+            <p><strong>Address:</strong> ${user.address || 'N/A'}</p>
+            <p><strong>Status:</strong> ${user.status}</p>
+            <p><strong>Joined:</strong> ${new Date(user.createdAt).toLocaleString()}</p>
+            <p><strong>Last Active:</strong> ${new Date(user.lastActive).toLocaleString()}</p>
+            ${user.emergencyContacts && user.emergencyContacts.length > 0 ? `
+                <h3>Emergency Contacts</h3>
+                <ul>
+                    ${user.emergencyContacts.map(contact => `
+                        <li>${contact.name} - ${contact.phone}</li>
+                    `).join('')}
+                </ul>
+            ` : ''}
+            ${user.recentActivity && user.recentActivity.length > 0 ? `
+                <h3>Recent Activity</h3>
+                <ul>
+                    ${user.recentActivity.map(activity => `
+                        <li>${activity.type} - ${new Date(activity.timestamp).toLocaleString()}</li>
+                    `).join('')}
+                </ul>
+            ` : ''}
+        `;
+
+        modal.style.display = 'block';
+    } catch (err) {
+        console.error('Error:', err);
+        alert('Failed to load user details: ' + err.message);
+    }
+}
+
+        function closeUserModal() {
+            document.getElementById('userModal').style.display = 'none';
+        }
+
+        async function toggleUserStatus(userId) {
+            try {
+                const response = await fetch(`http://localhost:5000/api/admin/user/${userId}/toggle-status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to update user status');
+                }
+
+                loadUsers(); // Reload user list
+            } catch (err) {
+                console.error('Error:', err);
+                alert('Failed to update user status');
+            }
+        }
+
+        // Search and filter functionality
+        document.getElementById('searchUser').addEventListener('input', function (e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#userTableBody tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+
+        document.getElementById('statusFilter').addEventListener('change', function (e) {
+            const status = e.target.value;
+            const rows = document.querySelectorAll('#userTableBody tr');
+
+            rows.forEach(row => {
+                if (status === 'all') {
+                    row.style.display = '';
+                } else {
+                    const userStatus = row.querySelector('.status-' + status);
+                    row.style.display = userStatus ? '' : 'none';
+                }
+            });
+        });
+
+        // Logout functionality
+        document.getElementById('logout').addEventListener('click', () => {
+            localStorage.removeItem('adminToken');
+            window.location.href = 'admin-login.html';
+        });
+
+        // Load users when page loads
+        loadUsers();
+
+        // Close modal when clicking outside
+        window.onclick = function (event) {
+            const modal = document.getElementById('userModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+
+
+    <script>
+        // Check if admin is logged in
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('adminToken');
+            if (!token) {
+                window.location.href = 'admin-login.html';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:5000/api/admin/check-status', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Not authorized');
+                }
+
+                // Load admin dashboard data
+                loadUsers();
+            } catch (err) {
+                console.error('Auth error:', err);
+                localStorage.removeItem('adminToken');
+                window.location.href = 'admin-login.html';
+            }
+        });
+    </script>
+</body>
+
+</html>

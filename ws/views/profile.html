@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Profile - WS</title>
+    <link rel="stylesheet" href="../public/css/style.css">
+    <style>
+        .profile-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 20px;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .profile-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .btn-save {
+            background-color: #28a745;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        .btn-save:hover {
+            background-color: #218838;
+        }
+
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .btn-upload {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .btn-upload:hover {
+            background-color: #e0e0e0;
+        }
+
+        .btn-delete {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            margin-left: 0.5rem;
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">WS</div>
+        <div class="nav-links">
+            <div class="close-nav">
+                <i class="fas fa-times"></i>
+            </div>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="index.html">Home</a>
+            <a href="#" id="logout">Logout</a>
+        </div>
+        <div class="toggle-btn">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar" id="avatarContainer">
+                <img id="avatarImage" style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                <i class="fas fa-user" id="defaultAvatar"></i>
+            </div>
+            <div class="avatar-upload">
+                <label for="avatar" class="btn-upload">
+                    <i class="fas fa-camera"></i> Change Photo
+                </label>
+                <input type="file" id="avatar" name="avatar" accept="image/*" style="display: none;">
+                <button type="button" id="deleteAvatar" class="btn-delete" style="display: none;">
+                    <i class="fas fa-trash"></i> Delete Photo
+                </button>
+            </div>
+            <h2>My Profile</h2>
+        </div>
+
+        <div class="alert alert-success" id="successAlert"></div>
+        <div class="alert alert-error" id="errorAlert"></div>
+
+        <form class="profile-form" id="profileForm">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" id="address" name="address">
+            </div>
+            <button type="submit" class="btn-save">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // Navigation Toggle
+        const toggleBtn = document.querySelector('.toggle-btn');
+        const navLinks = document.querySelector('.nav-links');
+        const closeNav = document.querySelector('.close-nav');
+
+        toggleBtn.addEventListener('click', () => {
+            navLinks.classList.add('active');
+        });
+
+        closeNav.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+        });
+
+        // Check authentication
+        if (!localStorage.getItem('token')) {
+            window.location.href = 'login.html';
+        }
+
+        // Logout function
+        document.getElementById('logout').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        });
+
+        // Load user profile
+        // Update loadProfile function to show/hide delete button
+        async function loadProfile() {
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/profile', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to load profile');
+                }
+
+                const profile = await response.json();
+                
+                // Populate form fields
+                document.getElementById('name').value = profile.name || '';
+                document.getElementById('email').value = profile.email || '';
+                document.getElementById('phone').value = profile.phone || '';
+                document.getElementById('address').value = profile.address || '';
+
+                // Display profile picture if exists
+                if (profile.avatar) {
+                    document.getElementById('avatarImage').src = profile.avatar;
+                    document.getElementById('avatarImage').style.display = 'block';
+                    document.getElementById('defaultAvatar').style.display = 'none';
+                    document.getElementById('deleteAvatar').style.display = 'inline-block';
+                } else {
+                    document.getElementById('avatarImage').style.display = 'none';
+                    document.getElementById('defaultAvatar').style.display = 'block';
+                    document.getElementById('deleteAvatar').style.display = 'none';
+                }
+            } catch (err) {
+                showError('Failed to load profile: ' + err.message);
+            }
+        }
+           // Handle avatar upload
+           document.getElementById('avatar').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                try {
+                    // Preview image
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('avatarImage').src = e.target.result;
+                        document.getElementById('avatarImage').style.display = 'block';
+                        document.getElementById('defaultAvatar').style.display = 'none';
+                    }
+                    reader.readAsDataURL(file);
+
+                    // Upload image
+                    const formData = new FormData();
+                    formData.append('avatar', file);
+
+                    const response = await fetch('http://localhost:5000/api/auth/upload-avatar', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`
+                        },
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to upload avatar');
+                    }
+
+                    showSuccess('Profile picture updated successfully!');
+                } catch (err) {
+                    showError('Failed to upload avatar: ' + err.message);
+                }
+            }
+        });
+
+          // Handle avatar deletion
+          document.getElementById('deleteAvatar').addEventListener('click', async () => {
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/delete-avatar', {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to delete avatar');
+                }
+
+                // Reset avatar display
+                document.getElementById('avatarImage').style.display = 'none';
+                document.getElementById('avatarImage').src = '';
+                document.getElementById('defaultAvatar').style.display = 'block';
+                document.getElementById('deleteAvatar').style.display = 'none';
+
+                showSuccess('Profile picture deleted successfully!');
+            } catch (err) {
+                showError('Failed to delete avatar: ' + err.message);
+            }
+        });
+
+        // Update profile
+        document.getElementById('profileForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            try {
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    address: document.getElementById('address').value
+                };
+
+                const response = await fetch('http://localhost:5000/api/auth/update-profile', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to update profile');
+                }
+
+                showSuccess('Profile updated successfully!');
+            } catch (err) {
+                showError('Failed to update profile: ' + err.message);
+            }
+        });
+
+        function showSuccess(message) {
+            const alert = document.getElementById('successAlert');
+            alert.textContent = message;
+            alert.style.display = 'block';
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 3000);
+        }
+
+        function showError(message) {
+            const alert = document.getElementById('errorAlert');
+            alert.textContent = message;
+            alert.style.display = 'block';
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 3000);
+        }
+
+        // Load profile when page loads
+        loadProfile();
+    </script>
+</body>
+</html>

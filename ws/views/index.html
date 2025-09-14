@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="../public/css/style.css">
+</head>
+
+<body>
+    <nav>
+        <div class="logo">WS</div>
+        <div class="nav-links">
+            <div class="close-nav">
+                <i class="fas fa-times"></i>
+            </div>
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="blog.html">Blog</a>
+            <a href="contact.html">Contact</a>
+            <a href="login.html">Login</a>
+            <a href="signup.html">Sign Up</a>
+            <a href="dashboard.html" id="dashboardLink">Dashboard</a>
+        </div>
+
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search...">
+            <button id="searchBtn"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="toggle-btn">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+
+    <script>
+        // Toggle Navigation
+        const toggleBtn = document.querySelector('.toggle-btn');
+        const navLinks = document.querySelector('.nav-links');
+        const closeNav = document.querySelector('.close-nav');
+
+        toggleBtn.addEventListener('click', () => {
+            navLinks.classList.add('active');
+        });
+
+        closeNav.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+        });
+
+        // Close navigation when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navLinks.contains(e.target) && !toggleBtn.contains(e.target)) {
+                navLinks.classList.remove('active');
+            }
+        });
+    </script>
+
+    <script>
+        // Search functionality
+        const searchData = {
+            // Existing pages
+            'home': {
+                title: 'Home',
+                content: 'Stay Safe, Stay Connected. Your safety is our priority.',
+                url: 'index.html',
+                keywords: 'home, main page, welcome, safety app, women safety, protection, Key Features'
+            },
+            'about': {
+                title: 'About Us',
+                content: 'Learn about Women Suraksha and our mission for women safety.',
+                url: 'about.html',
+                keywords: 'about us, mission, vision, team, women empowerment, who we are'
+            },
+            'blog': {
+                title: 'Safety Blog',
+                content: 'Read latest articles about women safety and empowerment.',
+                url: 'blog.html',
+                keywords: 'blog, articles, safety tips, self defense, awareness, news'
+            },
+            'contact': {
+                title: 'Contact Us',
+                content: 'Get in touch with our support team.',
+                url: 'contact.html',
+                keywords: 'contact, support, help, assistance, reach us, phone, email'
+            },
+            'dashboard': {
+                title: 'Dashboard',
+                content: 'Access your personal safety dashboard.',
+                url: 'dashboard.html',
+                keywords: 'dashboard, profile, settings, my account, tracking'
+            },
+            'emergency': {
+                title: 'Emergency Services',
+                content: '24/7 emergency support and SOS features.',
+                url: 'dashboard.html#sos',
+                keywords: 'emergency, SOS, help, urgent, crisis, alert, panic button'
+            },
+            'safety': {
+                title: 'Safety Resources',
+                content: 'Access safety guidelines and emergency numbers.',
+                url: 'dashboard.html#resources',
+                keywords: 'resources, guidelines, emergency numbers, safety tips'
+            },
+            // Additional features and topics
+            'location': {
+                title: 'Location Tracking',
+                content: 'Real-time location tracking and sharing features.',
+                url: 'dashboard.html',
+                keywords: 'location, GPS, tracking, real-time, share location'
+            },
+            'self-defense': {
+                title: 'Self Defense',
+                content: 'Learn essential self-defense techniques and tips.',
+                url: 'blog.html#self-defense',
+                keywords: 'self defense, protection, martial arts, safety techniques'
+            },
+            'helpline': {
+                title: 'Helpline Numbers',
+                content: 'Important emergency and helpline numbers.',
+                url: 'dashboard.html#resources',
+                keywords: 'helpline, emergency numbers, police, ambulance, support'
+            },
+            'community': {
+                title: 'Community Support',
+                content: 'Join our community of strong and supportive women.',
+                url: 'blog.html#community',
+                keywords: 'community, support group, network, women network'
+            },
+            'legal': {
+                title: 'Legal Resources',
+                content: 'Access legal information and women\'s rights resources.',
+                url: 'blog.html#legal',
+                keywords: 'legal, rights, laws, women rights, legal help'
+            }
+        };
+
+        // Update performSearch function to include keywords
+        function performSearch(searchTerm) {
+            const results = [];
+            searchTerm = searchTerm.toLowerCase();
+
+            for (const key in searchData) {
+                if (key.toLowerCase().includes(searchTerm) ||
+                    searchData[key].title.toLowerCase().includes(searchTerm) ||
+                    searchData[key].content.toLowerCase().includes(searchTerm) ||
+                    searchData[key].keywords.toLowerCase().includes(searchTerm)) {
+                    results.push(searchData[key]);
+                }
+            }
+
+            return results;
+        }
+
+        // ... rest of the code remains the same ...
+
+        function createSearchResults() {
+            if (!document.querySelector('.search-results')) {
+                const resultsDiv = document.createElement('div');
+                resultsDiv.className = 'search-results';
+                document.querySelector('.search-container').appendChild(resultsDiv);
+            }
+        }
+
+
+
+        function displayResults(results) {
+            const resultsDiv = document.querySelector('.search-results');
+            if (results.length === 0) {
+                resultsDiv.innerHTML = '<div class="search-result-item"><p>No results found</p></div>';
+            } else {
+                resultsDiv.innerHTML = results.map(result => `
+                <div class="search-result-item" onclick="window.location.href='${result.url}'">
+                    <h4>${result.title}</h4>
+                    <p>${result.content}</p>
+                </div>
+            `).join('');
+            }
+            resultsDiv.classList.add('active');
+        }
+
+        // Initialize search functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            createSearchResults();
+
+            const searchInput = document.getElementById('searchInput');
+            const searchBtn = document.getElementById('searchBtn');
+            const resultsDiv = document.querySelector('.search-results');
+
+            searchInput.addEventListener('input', function () {
+                if (this.value.length > 2) {
+                    const results = performSearch(this.value);
+                    displayResults(results);
+                } else {
+                    resultsDiv.classList.remove('active');
+                }
+            });
+
+            searchBtn.addEventListener('click', function () {
+                if (searchInput.value.length > 2) {
+                    const results = performSearch(searchInput.value);
+                    displayResults(results);
+                }
+            });
+
+            // Close search results when clicking outside
+            document.addEventListener('click', function (e) {
+                if (!e.target.closest('.search-container')) {
+                    resultsDiv.classList.remove('active');
+                }
+            });
+        });
+    </script>
+
+
+    <main class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1>Stay Safe, Stay Connected</h1>
+                <p>Your safety is our priority. Join thousands of women who trust our app for their personal security.
+                    Access real-time safety features and immediate emergency assistance at your fingertips.</p>
+                <div class="hero-buttons">
+                    <a href="signup.html" class="btn primary">Get Started</a>
+                    <a href="login.html" class="btn secondary">Login</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">50K+</span>
+                        <span class="stat-label">Active Users</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">98%</span>
+                        <span class="stat-label">Success Rate</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="../public/images/homme.jpg" alt="Women Safety App">
+            </div>
+        </div>
+    </main>
+
+    <section class="about-section" id="about">
+        <div class="about-container">
+            <div class="about-image">
+                <img src="../public/images/about.png" alt="Women Safety">
+            </div>
+            <div class="about-content">
+                <h2>About Women Suraksha</h2>
+                <p>Women Suraksha is dedicated to empowering women with cutting-edge safety solutions. Our mission is to
+                    create a safer environment where women can move freely and confidently.</p>
+                <p>With our comprehensive safety features, including real-time location tracking, instant SOS alerts,
+                    and 24/7 support, we ensure that help is always just a tap away.</p>
+                <div class="about-stats">
+                    <div class="stat">
+                        <h3>10K+</h3>
+                        <p>Active Users</p>
+                    </div>
+                    <div class="stat">
+                        <h3>24/7</h3>
+                        <p>Support</p>
+                    </div>
+                    <div class="stat">
+                        <h3>100%</h3>
+                        <p>Reliable</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <h2>Key Features</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <img src="../public/images/live_loc.jpg" alt="Location Tracking">
+                <h3>Live Location Tracking</h3>
+                <p>Share your real-time location with trusted contacts</p>
+            </div>
+            <div class="feature-card">
+                <img src="../public/images/sos2.jpg" alt="SOS Alert">
+                <h3>SOS Alert</h3>
+                <p>Quick emergency alert system to notify your emergency contacts</p>
+            </div>
+            <div class="feature-card">
+                <img src="../public/images/emr.jpg" alt="Emergency Contacts">
+                <h3>Emergency Contacts</h3>
+                <p>Add and manage your emergency contacts</p>
+            </div>
+            <div class="feature-card">
+                <img src="../public/images/all-time.png" alt="24/7 Support">
+                <h3>24/7 Support</h3>
+                <p>Round-the-clock assistance when you need it</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="video-gallery">
+        <h2>Safety Guide Videos</h2>
+        <div class="video-grid">
+            <div class="video-card">
+                <video src="../public/videos/safety-tips.mp4" poster="../public/images/video-thumb1.jpg"></video>
+                <h3>Essential Safety Tips</h3>
+                <button class="play-btn"><i class="fas fa-play"></i></button>
+            </div>
+            <div class="video-card">
+                <video src="../public/videos/self-defense.mp4" poster="../public/images/video-thumb2.jpg"></video>
+                <h3>Self Defense Techniques</h3>
+                <button class="play-btn"><i class="fas fa-play"></i></button>
+            </div>
+            <div class="video-card">
+                <video src="../public/videos/app-tutorial.mp4" poster="../public/images/video-thumb3.jpg"></video>
+                <h3>App Tutorial</h3>
+                <button class="play-btn"><i class="fas fa-play"></i></button>
+            </div>
+            <div class="video-card">
+                <video src="../public/videos/emergency.mp4" poster="../public/images/video-thumb4.jpg"></video>
+                <h3>Emergency Response Guide</h3>
+                <button class="play-btn"><i class="fas fa-play"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <div class="video-modal">
+        <div class="modal-content">
+            <button class="close-btn">&times;</button>
+            <video id="modal-video" controls></video>
+        </div>
+    </div>
+
+    <script>
+        // Video Gallery Functionality
+        document.addEventListener('DOMContentLoaded', function () {
+            const videoCards = document.querySelectorAll('.video-card');
+            const modal = document.querySelector('.video-modal');
+            const modalVideo = document.querySelector('#modal-video');
+            const closeBtn = document.querySelector('.close-btn');
+
+            videoCards.forEach(card => {
+                card.addEventListener('click', function () {
+                    const videoSrc = this.querySelector('video').getAttribute('src');
+                    modalVideo.setAttribute('src', videoSrc);
+                    modal.classList.add('active');
+                    modalVideo.play();
+                });
+            });
+
+            closeBtn.addEventListener('click', function () {
+                modal.classList.remove('active');
+                modalVideo.pause();
+                modalVideo.currentTime = 0;
+            });
+
+            modal.addEventListener('click', function (e) {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                    modalVideo.pause();
+                    modalVideo.currentTime = 0;
+                }
+            });
+        });
+    </script>
+
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Women Suraksha</h3>
+                <p>Empowering women with innovative safety solutions. Your security is our priority, 24/7.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#features">Safety Features</a></li>
+                    <li><a href="blog.html">Safety Blog</a></li>
+                    <li><a href="contact.html">Contact Support</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Safety Resources</h4>
+                <ul>
+                    <li><a href="#">Emergency Numbers</a></li>
+                    <li><a href="#">Safety Guidelines</a></li>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Report an Issue</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Download App</h4>
+                <div class="app-buttons">
+                    <a href="#" class="app-btn">
+                        <i class="fab fa-google-play"></i>
+                        <span>Google Play</span>
+                    </a>
+                    <a href="#" class="app-btn">
+                        <i class="fab fa-apple"></i>
+                        <span>App Store</span>
+                    </a>
+                </div>
+                <p class="emergency">24/7 Emergency: <span>1800-SAFE-NOW</span></p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 Women Suraksha App. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Cookie Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../public/js/main.js"></script>
+
+
+    <script>
+        // Check if user is logged in
+        window.onload = function () {
+            const token = localStorage.getItem('token');
+            const dashboardLink = document.getElementById('dashboardLink');
+            const loginLinks = document.querySelectorAll('a[href="login.html"]');
+            const signupLinks = document.querySelectorAll('a[href="signup.html"]');
+
+            if (token) {
+                // Show dashboard link and hide login/signup if user is logged in
+                dashboardLink.style.display = 'inline-block';
+                loginLinks.forEach(link => link.style.display = 'none');
+                signupLinks.forEach(link => link.style.display = 'none');
+            }
+        }
+    </script>
+</body>
+
+</html>

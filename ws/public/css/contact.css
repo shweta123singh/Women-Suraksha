@@ -1,0 +1,257 @@
+.contact-hero {
+    background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+    padding: 100px 0;
+    text-align: center;
+    color: white;
+}
+
+.contact-hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    animation: fadeInUp 0.8s ease;
+}
+
+.contact-hero h1 {
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+.contact-container {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+}
+
+.contact-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.info-card {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.3s ease;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.info-card:hover {
+    transform: translateY(-10px);
+}
+
+.info-card i {
+    font-size: 2.5em;
+    color: #ff6b6b;
+    margin-bottom: 20px;
+}
+
+.contact-form-container {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    position: relative;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.form-group label {
+    position: absolute;
+    left: 15px;
+    top: 15px;
+    color: #666;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.form-group input:focus ~ label,
+.form-group input:valid ~ label,
+.form-group textarea:focus ~ label,
+.form-group textarea:valid ~ label {
+    top: -10px;
+    left: 10px;
+    font-size: 12px;
+    background: white;
+    padding: 0 5px;
+    color: #ff6b6b;
+}
+
+.submit-btn {
+    background: #ff6b6b;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.submit-btn:hover {
+    background: #ff8e8e;
+}
+
+.map-section {
+    padding: 50px 20px;
+    text-align: center;
+}
+
+#map {
+    height: 400px;
+    margin-top: 30px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 992px) {
+    .contact-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .contact-hero h1 {
+        font-size: 2em;
+    }
+    
+    .contact-info {
+        grid-template-columns: 1fr;
+    }
+}
+
+.map-section {
+    padding: 50px 20px;
+    text-align: center;
+    background: #fff;
+}
+
+#map {
+    height: 400px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 30px auto;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+
+
+.search-container {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.search-container input {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px 0 0 4px;
+    font-size: 14px;
+    width: 200px;
+}
+
+.search-container button {
+    padding: 8px 12px;
+    background: #ff4081;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.search-container button:hover {
+    background: #f50057;
+}
+
+.search-results {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    width: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: none;
+    z-index: 1000;
+}
+
+.search-results.active {
+    display: block;
+}
+
+.search-result-item {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.search-result-item:hover {
+    background: #f5f5f5;
+}
+
+.search-result-item h4 {
+    margin: 0 0 5px 0;
+    color: #333;
+}
+
+.search-result-item p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .search-container {
+        margin-right: 60px;
+    }
+    
+    .search-container input {
+        width: 150px;
+    }
+}

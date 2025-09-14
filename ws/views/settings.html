@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Settings - WS</title>
+    <link rel="stylesheet" href="../public/css/style.css">
+    <style>
+        .settings-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 20px;
+        }
+
+        .settings-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .settings-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .settings-header i {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            color: #2c3e50;
+        }
+
+        .settings-header h3 {
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        .alert {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .password-toggle {
+            position: relative;
+        }
+
+        .password-toggle i {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+        }
+
+        .delete-confirmation {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .delete-confirmation-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .delete-confirmation-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .delete-confirmation-buttons button {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">WS</div>
+        <div class="nav-links">
+            <div class="close-nav">
+                <i class="fas fa-times"></i>
+            </div>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="index.html">Home</a>
+            <div class="account-dropdown">
+                <a href="#" class="account-btn"><i class="fas fa-user"></i> Account</a>
+                <div class="dropdown-content">
+                    <a href="profile.html"><i class="fas fa-id-card"></i> Profile</a>
+                    <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="#" id="logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+        <div class="toggle-btn">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+
+    <div class="settings-container">
+        <div class="settings-section">
+            <div class="settings-header">
+                <i class="fas fa-key"></i>
+                <h3>Change Password</h3>
+            </div>
+            <div class="alert alert-success" id="passwordSuccess"></div>
+            <div class="alert alert-error" id="passwordError"></div>
+            <form id="changePasswordForm">
+                <div class="form-group">
+                    <label for="currentPassword">Current Password</label>
+                    <div class="password-toggle">
+                        <input type="password" id="currentPassword" required>
+                        <i class="fas fa-eye" onclick="togglePassword('currentPassword')"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <div class="password-toggle">
+                        <input type="password" id="newPassword" required>
+                        <i class="fas fa-eye" onclick="togglePassword('newPassword')"></i>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm New Password</label>
+                    <div class="password-toggle">
+                        <input type="password" id="confirmPassword" required>
+                        <i class="fas fa-eye" onclick="togglePassword('confirmPassword')"></i>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Update Password
+                </button>
+            </form>
+        </div>
+
+        <div class="settings-section">
+            <div class="settings-header">
+                <i class="fas fa-user-times"></i>
+                <h3>Delete Account</h3>
+            </div>
+            <p style="color: #666; margin-bottom: 1rem;">
+                Warning: This action cannot be undone. All your data will be permanently deleted.
+            </p>
+            <button onclick="showDeleteConfirmation()" class="btn btn-danger">
+                <i class="fas fa-trash"></i> Delete Account
+            </button>
+        </div>
+    </div>
+
+    <div class="delete-confirmation" id="deleteConfirmation">
+        <div class="delete-confirmation-content">
+            <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #e74c3c; margin-bottom: 1rem;"></i>
+            <h3>Delete Account</h3>
+            <p>Are you sure you want to delete your account? This action cannot be undone.</p>
+            <div class="delete-confirmation-buttons">
+                <button onclick="hideDeleteConfirmation()" class="btn btn-primary">Cancel</button>
+                <button onclick="deleteAccount()" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation Toggle
+        const toggleBtn = document.querySelector('.toggle-btn');
+        const navLinks = document.querySelector('.nav-links');
+        const closeNav = document.querySelector('.close-nav');
+
+        toggleBtn.addEventListener('click', () => {
+            navLinks.classList.add('active');
+        });
+
+        closeNav.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+        });
+
+        // Password visibility toggle
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.nextElementSibling;
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
+        // Change Password
+        document.getElementById('changePasswordForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword !== confirmPassword) {
+                showAlert('passwordError', 'New passwords do not match');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/change-password', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({ currentPassword, newPassword })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message);
+                }
+
+                showAlert('passwordSuccess', 'Password updated successfully');
+                e.target.reset();
+            } catch (err) {
+                showAlert('passwordError', err.message);
+            }
+        });
+
+        // Delete Account
+        function showDeleteConfirmation() {
+            document.getElementById('deleteConfirmation').style.display = 'flex';
+        }
+
+        function hideDeleteConfirmation() {
+            document.getElementById('deleteConfirmation').style.display = 'none';
+        }
+
+        async function deleteAccount() {
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/delete-account', {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to delete account');
+                }
+
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+            } catch (err) {
+                alert('Failed to delete account: ' + err.message);
+            }
+        }
+
+        // Alert handling
+        function showAlert(elementId, message) {
+            const alert = document.getElementById(elementId);
+            alert.textContent = message;
+            alert.style.display = 'block';
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 3000);
+        }
+
+        // Check authentication
+        if (!localStorage.getItem('token')) {
+            window.location.href = 'login.html';
+        }
+
+        // Logout
+        document.getElementById('logout').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>

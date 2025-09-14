@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - WS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="../public/css/style.css">
+    <style>
+        body {
+            background: #f5f5f5;
+            font-family: Arial, sans-serif;
+        }
+
+        .admin-login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .admin-header i {
+            font-size: 48px;
+            color: #ff4081;
+            margin-bottom: 15px;
+        }
+
+        .admin-header h2 {
+            color: #333;
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #ff4081;
+            outline: none;
+        }
+
+        .form-group i {
+            position: absolute;
+            right: 15px;
+            top: 38px;
+            color: #888;
+        }
+
+        .admin-login-btn {
+            width: 100%;
+            padding: 14px;
+            background: #ff4081;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .admin-login-btn:hover {
+            background: #f50057;
+        }
+
+        .error-message {
+            display: none;
+            color: #dc3545;
+            text-align: center;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            background: #ffe6e6;
+        }
+
+        .back-to-home {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-to-home a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-to-home a:hover {
+            color: #ff4081;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-login-container">
+        <div class="admin-header">
+            <i class="fas fa-user-shield"></i>
+            <h2>Admin Login</h2>
+        </div>
+        <form id="adminLoginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" required>
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+                <i class="fas fa-lock"></i>
+            </div>
+            <button type="submit" class="admin-login-btn">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+        </form>
+        <div id="errorMessage" class="error-message"></div>
+        <div class="back-to-home">
+            <a href="index.html"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        // Replace the existing fetch code with this updated version
+        document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errorMessage = document.getElementById('errorMessage');
+            const loginButton = document.querySelector('.admin-login-btn');
+
+            try {
+                loginButton.disabled = true;
+                loginButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+
+                const response = await fetch('http://localhost:5000/api/admin/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: document.getElementById('username').value,
+                        password: document.getElementById('password').value
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Login failed');
+                }
+
+                localStorage.setItem('adminToken', data.token);
+                localStorage.setItem('adminData', JSON.stringify(data.admin));
+                window.location.href = 'admin.html';
+            } catch (err) {
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = err.message;
+            } finally {
+                loginButton.disabled = false;
+                loginButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+            }
+        });
+
+        // Show/Hide Password
+        document.getElementById('password').addEventListener('input', function () {
+            const icon = this.nextElementSibling;
+            if (this.value) {
+                icon.style.cursor = 'pointer';
+                icon.classList.remove('fa-lock');
+                icon.classList.add('fa-eye');
+                icon.onclick = function () {
+                    if (this.classList.contains('fa-eye')) {
+                        this.previousElementSibling.type = 'text';
+                        this.classList.remove('fa-eye');
+                        this.classList.add('fa-eye-slash');
+                    } else {
+                        this.previousElementSibling.type = 'password';
+                        this.classList.remove('fa-eye-slash');
+                        this.classList.add('fa-eye');
+                    }
+                };
+            } else {
+                icon.style.cursor = 'default';
+                icon.classList.remove('fa-eye', 'fa-eye-slash');
+                icon.classList.add('fa-lock');
+                icon.onclick = null;
+            }
+        });
+    </script>
+</body>
+
+</html>

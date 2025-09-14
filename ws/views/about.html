@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Women Suraksha</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    <link rel="stylesheet" href="../public/css/about.css">
+</head>
+<body>
+    <nav>
+        <div class="logo">WS</div>
+        <div class="nav-links">
+            <div class="close-nav">
+                <i class="fas fa-times"></i>
+            </div>
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="blog.html">Blog</a>
+            <a href="contact.html">Contact</a>
+            <a href="dashboard.html" id="dashboardLink">Dashboard</a>
+        </div>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search...">
+            <button id="searchBtn"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="toggle-btn">
+            <i class="fas fa-bars"></i>
+        </div>
+    </nav>
+
+    <script>
+        // Toggle Navigation
+        const toggleBtn = document.querySelector('.toggle-btn');
+        const navLinks = document.querySelector('.nav-links');
+        const closeNav = document.querySelector('.close-nav');
+    
+        toggleBtn.addEventListener('click', () => {
+            navLinks.classList.add('active');
+        });
+    
+        closeNav.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+        });
+    
+        // Close navigation when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navLinks.contains(e.target) && !toggleBtn.contains(e.target)) {
+                navLinks.classList.remove('active');
+            }
+        });
+    </script>
+
+<script>
+    // Search functionality
+    const searchData = {
+        // Existing pages
+        'home': {
+            title: 'Home',
+            content: 'Stay Safe, Stay Connected. Your safety is our priority.',
+            url: 'index.html',
+            keywords: 'home, main page, welcome, safety app, women safety, protection, Key Features'
+        },
+        'about': {
+            title: 'About Us',
+            content: 'Learn about Women Suraksha and our mission for women safety.',
+            url: 'about.html',
+            keywords: 'about us, mission, vision, team, women empowerment, who we are'
+        },
+        'blog': {
+            title: 'Safety Blog',
+            content: 'Read latest articles about women safety and empowerment.',
+            url: 'blog.html',
+            keywords: 'blog, articles, safety tips, self defense, awareness, news'
+        },
+        'contact': {
+            title: 'Contact Us',
+            content: 'Get in touch with our support team.',
+            url: 'contact.html',
+            keywords: 'contact, support, help, assistance, reach us, phone, email'
+        },
+        'dashboard': {
+            title: 'Dashboard',
+            content: 'Access your personal safety dashboard.',
+            url: 'dashboard.html',
+            keywords: 'dashboard, profile, settings, my account, tracking'
+        },
+        'emergency': {
+            title: 'Emergency Services',
+            content: '24/7 emergency support and SOS features.',
+            url: 'dashboard.html#sos',
+            keywords: 'emergency, SOS, help, urgent, crisis, alert, panic button'
+        },
+        'safety': {
+            title: 'Safety Resources',
+            content: 'Access safety guidelines and emergency numbers.',
+            url: 'dashboard.html#resources',
+            keywords: 'resources, guidelines, emergency numbers, safety tips'
+        },
+        // Additional features and topics
+        'location': {
+            title: 'Location Tracking',
+            content: 'Real-time location tracking and sharing features.',
+            url: 'dashboard.html',
+            keywords: 'location, GPS, tracking, real-time, share location'
+        },
+        'self-defense': {
+            title: 'Self Defense',
+            content: 'Learn essential self-defense techniques and tips.',
+            url: 'blog.html#self-defense',
+            keywords: 'self defense, protection, martial arts, safety techniques'
+        },
+        'helpline': {
+            title: 'Helpline Numbers',
+            content: 'Important emergency and helpline numbers.',
+            url: 'dashboard.html#resources',
+            keywords: 'helpline, emergency numbers, police, ambulance, support'
+        },
+        'community': {
+            title: 'Community Support',
+            content: 'Join our community of strong and supportive women.',
+            url: 'blog.html#community',
+            keywords: 'community, support group, network, women network'
+        },
+        'legal': {
+            title: 'Legal Resources',
+            content: 'Access legal information and women\'s rights resources.',
+            url: 'blog.html#legal',
+            keywords: 'legal, rights, laws, women rights, legal help'
+        }
+    };
+
+    // Update performSearch function to include keywords
+    function performSearch(searchTerm) {
+        const results = [];
+        searchTerm = searchTerm.toLowerCase();
+
+        for (const key in searchData) {
+            if (key.toLowerCase().includes(searchTerm) ||
+                searchData[key].title.toLowerCase().includes(searchTerm) ||
+                searchData[key].content.toLowerCase().includes(searchTerm) ||
+                searchData[key].keywords.toLowerCase().includes(searchTerm)) {
+                results.push(searchData[key]);
+            }
+        }
+
+        return results;
+    }
+
+    // ... rest of the code remains the same ...
+
+    function createSearchResults() {
+        if (!document.querySelector('.search-results')) {
+            const resultsDiv = document.createElement('div');
+            resultsDiv.className = 'search-results';
+            document.querySelector('.search-container').appendChild(resultsDiv);
+        }
+    }
+
+
+
+    function displayResults(results) {
+        const resultsDiv = document.querySelector('.search-results');
+        if (results.length === 0) {
+            resultsDiv.innerHTML = '<div class="search-result-item"><p>No results found</p></div>';
+        } else {
+            resultsDiv.innerHTML = results.map(result => `
+            <div class="search-result-item" onclick="window.location.href='${result.url}'">
+                <h4>${result.title}</h4>
+                <p>${result.content}</p>
+            </div>
+        `).join('');
+        }
+        resultsDiv.classList.add('active');
+    }
+
+    // Initialize search functionality
+    document.addEventListener('DOMContentLoaded', function () {
+        createSearchResults();
+
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const resultsDiv = document.querySelector('.search-results');
+
+        searchInput.addEventListener('input', function () {
+            if (this.value.length > 2) {
+                const results = performSearch(this.value);
+                displayResults(results);
+            } else {
+                resultsDiv.classList.remove('active');
+            }
+        });
+
+        searchBtn.addEventListener('click', function () {
+            if (searchInput.value.length > 2) {
+                const results = performSearch(searchInput.value);
+                displayResults(results);
+            }
+        });
+
+        // Close search results when clicking outside
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.search-container')) {
+                resultsDiv.classList.remove('active');
+            }
+        });
+    });
+</script>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text" data-aos="fade-right">
+                <h1>Empowering Women Through Safety</h1>
+                <p>Our mission is to create a world where every woman feels safe, confident, and empowered.</p>
+            </div>
+            <div class="hero-image" data-aos="fade-left">
+                <img src="../public/images/about22.png" alt="Women Empowerment">
+            </div>
+        </div>
+    </section>
+
+    <section class="mission">
+        <div class="mission-content">
+            <div class="mission-text" data-aos="fade-up">
+                <h2>Our Mission</h2>
+                <p>At Women Suraksha, we believe in creating a safer world for women through technology and community support. Our innovative solutions are designed to provide immediate assistance and peace of mind.</p>
+            </div>
+            <div class="values-grid">
+                <div class="value-card" data-aos="zoom-in" data-aos-delay="100">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Safety First</h3>
+                    <p>Ensuring the security of every woman is our top priority</p>
+                </div>
+                <div class="value-card" data-aos="zoom-in" data-aos-delay="200">
+                    <i class="fas fa-users"></i>
+                    <h3>Community</h3>
+                    <p>Building a strong network of support and trust</p>
+                </div>
+                <div class="value-card" data-aos="zoom-in" data-aos-delay="300">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>Innovation</h3>
+                    <p>Using technology to enhance personal safety</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="team">
+        <h2 data-aos="fade-up">Our Leadership Team</h2>
+        <div class="team-grid">
+            <div class="team-member" data-aos="fade-up" data-aos-delay="100">
+                <img src="../public/images/sureli.jpeg" alt="Team Member">
+                <h3>Sureli Adak</h3>
+                <p>Team Leader</p>
+            </div>
+            <div class="team-member" data-aos="fade-up" data-aos-delay="200">
+                <img src="../public/images/DSC_9153 s.jpg" alt="Team Member">
+                <h3>Anubhab Seal</h3>
+                <p>Team Member</p>
+            </div>
+            <div class="team-member" data-aos="fade-up" data-aos-delay="300">
+                <img src="../public/images/team3.jpg" alt="Team Member">
+                <h3>Sweta Singh</h3>
+                <p>Team Member</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Women Suraksha</h3>
+                <p>Empowering women with innovative safety solutions. Your security is our priority, 24/7.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#features">Safety Features</a></li>
+                    <li><a href="blog.html">Safety Blog</a></li>
+                    <li><a href="contact.html">Contact Support</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Safety Resources</h4>
+                <ul>
+                    <li><a href="#">Emergency Numbers</a></li>
+                    <li><a href="#">Safety Guidelines</a></li>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Report an Issue</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Download App</h4>
+                <div class="app-buttons">
+                    <a href="#" class="app-btn">
+                        <i class="fab fa-google-play"></i>
+                        <span>Google Play</span>
+                    </a>
+                    <a href="#" class="app-btn">
+                        <i class="fab fa-apple"></i>
+                        <span>App Store</span>
+                    </a>
+                </div>
+                <p class="emergency">24/7 Emergency: <span>1800-SAFE-NOW</span></p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 Women Suraksha App. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Cookie Policy</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+</html>
